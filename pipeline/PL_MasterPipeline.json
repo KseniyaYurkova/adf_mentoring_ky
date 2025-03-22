@@ -1,0 +1,72 @@
+{
+	"name": "PL_MasterPipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "PL_CopyFromBlobToBlob",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_CopyFromBlobToBlob",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "PL_CopyFromBlobToDBStg",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_CopyFromBlobToBlob",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_CopyFromBlobToDBStg",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "PL_ArchiveLoadedFiles",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_CopyFromBlobToDBStg",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_ArchiveLoadedFiles",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2025-02-26T09:22:41Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,11 @@
+{
+	"name": "LS_KV_MentoringKeyVaultKY",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureKeyVault",
+		"typeProperties": {
+			"baseUrl": "https://mentoring-key-vault-ky.vault.azure.net/"
+		}
+	}
+}

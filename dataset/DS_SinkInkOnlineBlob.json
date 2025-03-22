@@ -1,0 +1,19 @@
+{
+	"name": "DS_SinkInkOnlineBlob",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ADSL_SinkOnline",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileSystem": "online"
+			}
+		},
+		"schema": {}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

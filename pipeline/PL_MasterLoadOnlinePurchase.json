@@ -1,0 +1,72 @@
+{
+	"name": "PL_MasterLoadOnlinePurchase",
+	"properties": {
+		"activities": [
+			{
+				"name": "PL_OncCopyFilesFromBlobToBlob",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_OncCopyFilesFromBlobToBlob",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "PL_ArchiveOnline",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_IncLoadJsonOnline",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_ArchiveOnline",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "PL_IncLoadJsonOnline",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_OncCopyFilesFromBlobToBlob",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_IncLoadJsonOnline",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2025-03-11T16:11:25Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
