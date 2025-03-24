@@ -1,0 +1,48 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "mentoring-adf-ky"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"value": ""
+		},
+		"LS_ADSL_SinkOnline_accountKey": {
+			"value": ""
+		},
+		"LS_ABLB_azurementoringauky_properties_typeProperties_serviceEndpoint": {
+			"value": "https://azurementoringauky.blob.core.windows.net/"
+		},
+		"LS_ABLB_azurementoringstorageky_properties_typeProperties_sasUri_secretName": {
+			"value": "sasazurementoringstorageky"
+		},
+		"LS_ADLS_azurementoringdatalakeky_properties_typeProperties_serviceEndpoint": {
+			"value": "https://azurementoringdatalakeky.blob.core.windows.net"
+		},
+		"LS_ADSL_SinkOnline_properties_typeProperties_url": {
+			"value": "https://azurementoringdatalakeky.dfs.core.windows.net/"
+		},
+		"LS_ASQL_DataMart_properties_typeProperties_connectionString_secretName": {
+			"value": "sqlconnectdatamart"
+		},
+		"LS_ASQL_azurementoringky_mssql_movies_properties_typeProperties_connectionString_secretName": {
+			"value": "sqlconnectionstringazurementoringky"
+		},
+		"LS_KV_MentoringKeyVaultKY_properties_typeProperties_baseUrl": {
+			"value": "https://mentoring-key-vault-ky.vault.azure.net/"
+		},
+		"LS_MSQL_CinemaTickets_properties_typeProperties_connectionString_secretName": {
+			"value": "mssqlonpremserverconnection"
+		},
+		"SL_ABLB_IncCopyFileOnline_properties_typeProperties_sasUri_secretName": {
+			"value": "sasonlineinccopy"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}

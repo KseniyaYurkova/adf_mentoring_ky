@@ -1,0 +1,6 @@
+{
+	"URLEmailNotification": {
+		"type": "string",
+		"value": "https://mentoring-key-vault-ky.vault.azure.net/secrets/posturlemailnotification/0c070fba7f56440a97c170455edb6374?api-version=7.0"
+	}
+}
