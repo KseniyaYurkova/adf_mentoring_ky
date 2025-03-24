@@ -1,0 +1,25 @@
+{
+	"name": "DS_ASQL_MultySink",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ASQL_azurementoringky_mssql_movies",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"SinkTableName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": {
+				"value": "@dataset().SinkTableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

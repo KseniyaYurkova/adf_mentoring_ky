@@ -1,0 +1,35 @@
+{
+	"name": "DS_ASQL_GetTbleFileName",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ASQL_azurementoringky_mssql_movies",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "ID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "TableName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PrefixFileName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Status",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "etl",
+			"table": "tControlMetadata"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

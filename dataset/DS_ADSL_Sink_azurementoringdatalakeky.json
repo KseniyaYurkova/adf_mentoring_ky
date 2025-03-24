@@ -1,0 +1,34 @@
+{
+	"name": "DS_ADSL_Sink_azurementoringdatalakeky",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ADLS_azurementoringdatalakeky",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"FileName": {
+				"type": "string",
+				"defaultValue": "item().name"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@concat(\nsubstring(dataset().FileName, 0, indexOf(dataset().FileName, '.')), '_',\n  formatDateTime(utcNow(), 'yyyyMMddHHmmss'),\n   '.csv'\n)",
+					"type": "Expression"
+				},
+				"folderPath": "movies",
+				"container": "raw"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

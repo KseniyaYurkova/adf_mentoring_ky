@@ -1,0 +1,112 @@
+{
+	"name": "DS_EtlLog",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ASQL_azurementoringky_mssql_movies",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "LogID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "PipelineName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PipelineRunID",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "ActivityName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "MeterType",
+				"type": "nvarchar"
+			},
+			{
+				"name": "BillingDuration",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "ProcessedFilesCount",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "RowsRead",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "RowsWritten",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "UsedDIU",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ParallelCopiesCount",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "StartTime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "EndTime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "Status",
+				"type": "nvarchar"
+			},
+			{
+				"name": "QueueDuration",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "TransferDuration",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "CopyDuration",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "CreatedAt",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "UpdatedAt",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "etl",
+			"table": "CopyActivityLog"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

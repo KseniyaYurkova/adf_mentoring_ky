@@ -1,0 +1,19 @@
+{
+	"name": "SL_ABLB_IncCopyFileOnline",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobStorage",
+		"typeProperties": {
+			"sasUri": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "LS_KV_MentoringKeyVaultKY",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "sasonlineinccopy",
+				"secretVersion": "6c3adb77e21e483885e31887d84b6c15"
+			}
+		}
+	}
+}

@@ -1,0 +1,355 @@
+{
+	"name": "PL_CopyFromBlobToStgMetadata",
+	"properties": {
+		"activities": [
+			{
+				"name": "Lookup1",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "select * from [etl].[tControlMetadata] \nwhere  status = 'A'",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "DS_ASQL_GetTbleFileName",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Lookup1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup1').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy data1",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "DelimitedTextSource",
+									"additionalColumns": [
+										{
+											"name": "pipelineId",
+											"value": {
+												"value": "@pipeline().RunId",
+												"type": "Expression"
+											}
+										},
+										{
+											"name": "source_filename",
+											"value": "$$FILENAME"
+										}
+									],
+									"storeSettings": {
+										"type": "AzureBlobStorageReadSettings",
+										"recursive": false,
+										"wildcardFileName": {
+											"value": "@split(item().FilePath, '/')[2]",
+											"type": "Expression"
+										},
+										"enablePartitionDiscovery": false
+									},
+									"formatSettings": {
+										"type": "DelimitedTextReadSettings"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "@concat('truncate table stg.', item().TableNameDest)",
+										"type": "Expression"
+									},
+									"writeBehavior": "insert",
+									"sqlWriterUseTableLock": false,
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"translator": {
+									"value": "@json(item().Mapping)",
+									"type": "Expression"
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "DS_ADSL_FilesToStage",
+									"type": "DatasetReference",
+									"parameters": {
+										"ColDelim": {
+											"value": "@item().ColumnDelimeter",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DS_ASQL_Stg",
+									"type": "DatasetReference",
+									"parameters": {
+										"TableName": {
+											"value": "@item().TableNameDest",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "Stored procedure_log",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Copy data1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[etl].[LogCopyActivity]",
+								"storedProcedureParameters": {
+									"RowsRead": {
+										"value": {
+											"value": "@activity('Copy data1').output.rowsRead\n",
+											"type": "Expression"
+										},
+										"type": "Int64"
+									},
+									"PipelineName": {
+										"value": {
+											"value": "@pipeline().Pipeline",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"PipelineRunID": {
+										"value": {
+											"value": "@pipeline().RunId",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"ActivityName": {
+										"value": {
+											"value": "Copy Data1",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"MeterType": {
+										"value": {
+											"value": "@activity('Copy data1').output.billingReference.billableDuration[0].meterType",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"BillingDuration": {
+										"value": {
+											"value": "@activity('Copy data1').output.copyDuration",
+											"type": "Expression"
+										},
+										"type": "Double"
+									},
+									"ProcessedFilesCount": {
+										"value": {
+											"value": "@activity('Copy data1').output.filesRead\n",
+											"type": "Expression"
+										},
+										"type": "Int64"
+									},
+									"RowsWritten": {
+										"value": {
+											"value": "@activity('Copy data1').output.rowsCopied",
+											"type": "Expression"
+										},
+										"type": "Int64"
+									},
+									"StartTime": {
+										"value": {
+											"value": "@activity('Copy data1').ExecutionStartTime",
+											"type": "Expression"
+										},
+										"type": "Datetime"
+									},
+									"EndTime": {
+										"value": {
+											"value": "@activity('Copy data1').ExecutionEndTime",
+											"type": "Expression"
+										},
+										"type": "Datetime"
+									},
+									"ParallelCopiesCount": {
+										"value": {
+											"value": "@activity('Copy data1').output.usedParallelCopies",
+											"type": "Expression"
+										},
+										"type": "Int64"
+									},
+									"UsedDIU": {
+										"value": {
+											"value": "@activity('Copy data1').output.usedDataIntegrationUnits",
+											"type": "Expression"
+										},
+										"type": "Int16"
+									},
+									"Status": {
+										"value": {
+											"value": "@activity('Copy data1').output.executionDetails[0].status",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"QueueDuration": {
+										"value": {
+											"value": "@activity('Copy data1').output.executionDetails[0].detailedDurations.queuingDuration",
+											"type": "Expression"
+										},
+										"type": "Double"
+									},
+									"TransferDuration": {
+										"value": {
+											"value": "@activity('Copy data1').output.executionDetails[0].detailedDurations.transferDuration",
+											"type": "Expression"
+										},
+										"type": "Double"
+									},
+									"CopyDuration": {
+										"value": {
+											"value": "@activity('Copy data1').output.executionDetails[0].detailedDurations.preCopyScriptDuration",
+											"type": "Expression"
+										},
+										"type": "Double"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "LS_ASQL_azurementoringky_mssql_movies",
+								"type": "LinkedServiceReference"
+							}
+						},
+						{
+							"name": "Stored procedure_error",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Copy data1",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[etl].[LogPipelineError]",
+								"storedProcedureParameters": {
+									"PipelineName": {
+										"value": {
+											"value": "@pipeline().Pipeline",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"PipelineRunID": {
+										"value": {
+											"value": "@pipeline().RunId",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"ActivityName": {
+										"value": "Copy Data 1",
+										"type": "String"
+									},
+									"ErrorCode": {
+										"value": {
+											"value": "@activity('Copy data1').error.errorCode",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"FailureType": {
+										"value": {
+											"value": "@activity('Copy data1').error.failureType",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"ErrorMessage": {
+										"value": {
+											"value": "@activity('Copy data1').error.message",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"ErrorDateTime": {
+										"value": {
+											"value": "@utcNow()",
+											"type": "Expression"
+										},
+										"type": "Datetime"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "LS_ASQL_azurementoringky_mssql_movies",
+								"type": "LinkedServiceReference"
+							}
+						}
+					]
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2025-03-18T13:56:16Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
